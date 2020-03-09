@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Lab.Demo.EF.Entities.Region>
+@{ 
+    ViewBag.Title = "Index";
+}
+
+<h3>Regiones</h3>
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Acciones</th>
+            <th scope="col">Acciones con Ajax</th>
+        </tr>
+    </thead>
+    @foreach (var item in Model)
+    {
+<tr>
+    <td name="RegionID" id="@Html.DisplayFor(modelItem => item.RegionID)">
+        @Html.DisplayFor(modelItem => item.RegionID)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.RegionDescription)
+    </td>
+
+    <td>
+        @Html.ActionLink("Editar", "UpdateForm", new { id = item.RegionID }, new { @class = "btn btn-warning" })
+        @Html.ActionLink("Eliminar", "DeleteForm", new { id = item.RegionID }, new { @class = "btn btn-danger" })
+    </td>
+
+    <td>
+        <button class="btn btn-warning" id="btn-ajax-update" onclick="">Editar con Ajax</button>
+        <button class="btn btn-danger" id="btn-ajax-delete" onclick="ajaxDelete(@Html.DisplayFor(modelItem => item.RegionID),'@Html.DisplayFor(modelItem => item.RegionDescription)')">Eliminar con Ajax</button>
+    </td>
+
+</tr>
+    }
+</table>
+
+@Html.ActionLink("Create", "CreateForm", null, new { @class = "btn btn-primary"})
+
+
+<script>
+
+
+    function ajaxDelete(regionID, regionDescripcion) {
+
+
+        var model = {
+
+            RegionID: regionID,
+                RegionDescription: regionDescripcion
+        }
+
+        $.ajax({
+
+            url: '@Url.Action("Delete")',
+            method: 'POST',
+            data: { region: model },
+
+            success: function (data) {
+                window.location.href = "@Url.Action("Index")";
+            },
+            error: function () {
+                alert('Nop')
+            }
+
+        })
+    }
+
+</script>

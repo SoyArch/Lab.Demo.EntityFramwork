@@ -1,0 +1,198 @@
+﻿<h2>Get All</h2>
+
+<table class="table" id="Tabla">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Region</th>
+            <th scope="col">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<div class="row">
+    <div class="col-md-5">
+        <h2>Editar Region</h2>
+
+        <div class="form-group">
+            <label>Region ID</label>
+            <input type="text" id="RegionID" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Region Descripcion</label>
+            <input type="text" id="RegionDescripcion" class="form-control" readonly="readonly" />
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" id="btn-ajax-get">Obtener Region</button>
+            <button class="btn btn-primary" id="btn-ajax-update">Guardar Region</button>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <h2>Crear Region</h2>
+
+        <div class="form-group">
+            <label>Ingrese ID</label>
+            <input type="text" id="CreateRegionID" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Ingrese Descripcion</label>
+            <input type="text" id="CreateRegionDescripcion" class="form-control" />
+
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" id="btn-ajax-create">Crear Region</button>
+        </div>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+
+        $('#btn-ajax-get').on('click', ajaxGet);
+        $('#btn-ajax-create').on('click', ajaxCreate);
+        $('#btn-ajax-update').hide();
+        $('#btn-ajax-update').on('click', ajaxUpdate);
+        getAll();
+
+    });
+
+    function getAll() {
+
+
+
+        $.getJSON("/api/region/", function (data) {
+            for (let item of data) {
+
+                $("#Tabla tbody").append(`
+                    <tr>
+                        <th id="`+item.RegionID+`">`+item.RegionID+`</th>
+                        <td id="`+item.RegionID+`">`+item.RegionDescription.trim()+`</td>
+                        <td>
+                            <button class="btn btn-warning" onclick="edit(`+ item.RegionID+`,'`+item.RegionDescription.trim()+`')" id="btn-editar">Editar</button>
+                            <button class="btn btn-danger" onclick="ajaxDelete(`+ item.RegionID +`)">Eliminar</button>
+                       </td>
+                    </tr>`);   
+            }
+        });
+    }
+
+    function edit(regionID,regionDescripcion) {
+
+        $("td" + "#" + regionDescripcion).html('<input type="text" class="form-control" id="' + regionID + '">"')
+        $("td" + "#" + regionDescripcion).remove
+        $("#btn-editar").removeAttr("onclick")
+        $("#btn-editar").text("Guardar")
+        $("#btn-editar").attr("class", "btn btn-success")
+        $("#btn-editar").attr("onclick", "editar("+regionID+")")        
+    }
+
+    function editar(region) {
+            var model = {
+            RegionID: tregionID,
+            RegionDescription: $("input " + "#" + item.RegionDescription).val()
+        }
+
+        $.ajax({
+
+            url: '/api/region/',
+            method: 'PUT',
+            data: model,
+
+            success: function () {
+                window.location.href = "@Url.Action("Index")";
+            },
+            error: function () {
+                alert('Nop')
+            }
+
+        })
+        }
+
+
+    function ajaxUpdate() {
+
+        var model = {
+            RegionID: $('#RegionID').val(),
+            RegionDescription: $('#RegionDescripcion').val()
+        }
+
+
+
+        $.ajax({
+
+            url: '/api/region/',
+            method: 'PUT',
+            data: model,
+
+            success: function () {
+                window.location.href = "@Url.Action("Index")";
+            },
+            error: function () {
+                alert('Nop')
+            }
+
+        })
+
+    }
+
+    function ajaxGet() {
+
+        idReg = $('#RegionID').val();
+
+        $.getJSON("/api/region/"+idReg, function (data) {
+            $('#RegionID').val(data.RegionID);
+            $('#RegionDescripcion').val(data.RegionDescription);
+            $('#btn-ajax-update').show();
+            $('#RegionDescripcion').removeAttr("readonly")
+            $('#RegionID').attr("readonly", "readonly")
+
+        });
+    }
+
+
+
+    function ajaxDelete(regionID) {
+
+        $.ajax({
+
+            url: '/api/region/'+regionID,
+            method: 'DELETE',
+            success: function () {
+                window.location.href = "@Url.Action("Index")";
+            },
+            error: function () {
+                alert('Nop')
+            }
+
+        })
+    }
+
+    function ajaxCreate() {
+
+        var model = {
+            RegionID: $('#CreateRegionID').val(),
+            RegionDescription: $('#CreateRegionDescripcion').val()
+        }
+
+
+
+        $.ajax({
+
+            url: '/api/region/',
+            method: 'POST',
+            data: model,
+
+            success: function () {
+                window.location.href = "@Url.Action("Index")";
+            },
+            error: function () {
+                alert('Nop')
+            }
+
+        })
+    }
+
+
+</script>

@@ -1,0 +1,59 @@
+﻿@model Lab.Demo.EF.Entities.Region
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Crear Nueva Region</h2>
+
+@using (Html.BeginForm("Create", "Region", FormMethod.Post))
+{
+    <div class="form-group">
+        <label>Ingrese ID</label>
+        @Html.TextBoxFor(m => m.RegionID, new {@class = "form-control"})
+    </div>
+
+    <div class="form-group">
+        <label>Ingrese Descripcion</label>
+        @Html.TextBoxFor(m => m.RegionDescription, new {@class = "form-control"})
+
+     </div>
+        <button type="submit" class="btn btn-primary">Crear Region</button>
+        }
+
+<br /><br />
+
+<button class="btn btn-primary" id="btn-ajax">Crear Region con Ajax</button>
+
+<script>
+
+    $(document).ready(function () {
+
+        $('#btn-ajax').on('click', ajaxCreate);
+    });
+
+    function ajaxCreate() {
+
+        var model = {
+            RegionID: $('#RegionID').val(),
+                RegionDescription: $('#RegionDescription').val()
+        }
+
+        $.ajax({
+
+            url: '@Url.Action("Create")',
+            method: 'POST',
+            data: { region: model },
+
+            success: function (data) {
+                window.location.href = "@Url.Action("Index")";
+            },
+            error: function () {
+                alert('Nop')
+            }
+
+        })
+    }
+
+
+</script>

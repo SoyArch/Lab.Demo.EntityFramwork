@@ -1,0 +1,56 @@
+﻿@model Lab.Demo.EF.Entities.Region
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+@using (Html.BeginForm("Delete", "Region", FormMethod.Post))
+{
+    <div class="form-group">
+        <label>ID</label>
+        @Html.TextBoxFor(m => m.RegionID, new { @readonly = "readonly", @class = "form-control" })
+        <br />
+        <label>Descripcion</label>
+        @Html.TextBoxFor(m => m.RegionDescription, new { @readonly = "readonly", @class = "form-control" })
+</div>
+
+    <button type="submit" class="btn btn-danger">Eliminar Region</button>
+}
+
+<br />
+<br />
+
+<button class="btn btn-primary" id="btn-ajax">Eliminar Region con Ajax</button>
+
+<script>
+
+    $(document).ready(function () {
+
+        $('#btn-ajax').on('click', ajaxDelete);
+    });
+
+    function ajaxDelete() {
+
+        var model = {
+            RegionID: $('#RegionID').val(),
+                RegionDescription: $('#RegionDescription').val()
+        }
+
+        $.ajax({
+
+            url: '@Url.Action("Delete")',
+            method: 'POST',
+            data: { region: model },
+
+            success: function (data) {
+                window.location.href = "@Url.Action("Index")";
+            },
+            error: function () {
+                alert('Nop')
+            }
+
+        })
+    }
+
+
+</script>

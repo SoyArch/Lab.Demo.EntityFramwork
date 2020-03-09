@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Descripcion</th>
+
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: regionList">
+        <tr>
+            <th data-bind="text: RegionID"></th>
+            <th data-bind="text: RegionDescription"></th>
+        </tr>
+    </tbody>
+</table>
+
+
+<script>
+
+    var ViewModel = function () {
+
+        self = this;
+        self.getAll = function () {
+            var origin = window.location.origin;
+            $.getJSON(origin+'/api/region/', function (data) {
+                self.regionList(data);
+            })
+
+        }
+
+        self.regionList = ko.observableArray();
+
+    }
+
+    
+
+    $(document).ready(function () {
+
+       var vModel = new ViewModel()
+
+        ko.applyBindings(vModel)
+
+        vModel.getAll();
+});
+
+</script>

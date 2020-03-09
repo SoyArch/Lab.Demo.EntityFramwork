@@ -1,0 +1,66 @@
+﻿@model Lab.Demo.EF.Entities.Region
+@{
+    ViewBag.Title = "Region Update";
+}
+
+<h3>Region Update</h3>
+
+@using (Html.BeginForm("Update", "Region", FormMethod.Post))
+{
+
+    <div class="form-group">
+        <label>ID</label>
+        @Html.TextBoxFor(m => m.RegionID, new { @readonly = "readonly", @class = "form-control" })
+
+    </div>
+    <div class="form-group">
+        <label>Descripcion</label>
+        @Html.TextBoxFor(m => m.RegionDescription, new { @readonly = "readonly", @class = "form-control" })
+    </div>
+    <div class="form-group">
+        <label>Ingrese Nueva Descripcion</label>
+        @Html.TextBoxFor(m => m.RegionDescription, new { @class = "form-control", id = "RegionDescriptionNueva"})
+    </div>
+
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+
+
+}
+
+<br />
+<br />
+
+<button class="btn btn-primary" id="btn-ajax">Editar Region con Ajax</button>
+
+<script>
+
+    $(document).ready(function () {
+
+        $('#btn-ajax').on('click', ajaxUpdate);
+    });
+
+    function ajaxUpdate() {
+
+        var model = {
+            RegionID: $('#RegionID').val(),
+                RegionDescription: $('#RegionDescriptionNueva').val()
+        }
+
+        $.ajax({
+
+            url: '@Url.Action("Update")',
+            method: 'POST',
+            data: { region: model },
+
+            success: function (data) {
+                window.location.href = "@Url.Action("Index")";
+            },
+            error: function () {
+                alert('Nop')
+            }
+
+        })
+    }
+
+
+</script>
